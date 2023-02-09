@@ -111,3 +111,12 @@
                     }
                 }
 ```
+
+# Решение
+
+[Код решения]()
+
+Запуск решения:
+
+`docker build -t mapper .`
+`docker run -it mapper --build`
