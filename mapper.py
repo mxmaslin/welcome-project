@@ -2,7 +2,7 @@ from pprint import pprint
 
 from typing import List, Tuple, Dict
 
-from conftest import service2l
+from data import initial2
 
 
 def refine_entry(entry: Tuple[str]) -> List[str]:
@@ -30,7 +30,6 @@ def dedupe(endpoints: List[str]) -> List[str]:
     return deduped_paths
 
 
-
 def build_tree(endpoints: List[str]) -> Dict:
     """
     Build tree out of the endpoints.
@@ -44,14 +43,13 @@ def build_tree(endpoints: List[str]) -> Dict:
     return nested_dict
 
 
-if __name__ == '__main__':
-    refined_endpoints = [refine_entry(x) for x in service2l]
-    for e in refined_endpoints:
-        print(e)
-    print('z' * 80)
+def main(input_data):
+    refined_endpoints = [refine_entry(x) for x in input_data]
     deduped = sorted(dedupe(refined_endpoints))
-    # for d in deduped:
-    #     print(d)
-    # print('x' * 80)
-    tree = build_tree(deduped)
-    pprint(tree)
+    result = build_tree(deduped)
+    return result
+
+
+if __name__ == '__main__':
+    result = main(input2)
+    pprint(result)
