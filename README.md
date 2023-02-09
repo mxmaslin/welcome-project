@@ -118,5 +118,7 @@
 
 Запуск решения:
 
-`docker build -t mapper .`
-`docker run -it mapper --build`
+```
+docker build -t mapper .
+docker run -it mapper --build
+```
