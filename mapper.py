@@ -2,26 +2,13 @@ from pprint import pprint
 
 from typing import List, Tuple, Dict
 
-
-service1 = [
-    ("GET", "/api/v1/cluster/metrics"),
-    ("POST", "/api/v1/cluster/{cluster}/plugins"),
-    ("POST", "/api/v1/cluster/{cluster}/plugins/{plugin}")
-]
-
-service2 = [
-    ("POST", "/api/v1/cluster/{cluster}/plugins/first/asecond"),
-    ("GET", "/api/v1/cluster/freenodes/list"),
-    ("GET", "/api/v1/cluster/nodes/supernode/wow"),
-    ("POST", "/api/v1/cluster/{cluster}/plugins/{plugin}"),
-    ("POST", "/api/v1/cluster/{cluster}/plugins"),
-    ("POST", "/api/v1/xluster/{cluster}/plugins"),
-    ("POST", "/api/v1/cluster/{cluster}/plugins/first"),
-    ("GET", "/api/v1/cluster/anodes/supernode/a/wow"),
-]
+from conftest import service2l
 
 
 def refine_entry(entry: Tuple[str]) -> List[str]:
+    """
+    Remove prefix and parameters from entry.
+    """
     verb, path = entry
     path_parts = path.lstrip('/api/v1/').split('/')
     path_parts = [x for x in path_parts if not x.startswith('{')]
@@ -29,18 +16,25 @@ def refine_entry(entry: Tuple[str]) -> List[str]:
 
 
 def dedupe(endpoints: List[str]) -> List[str]:
+    """
+    Remove duplicates and enclosing endpoints.
+    """
     paths_set = set([tuple(x) for x in endpoints])
     deduped_paths = []
     for path in paths_set:
         for other_path in paths_set:
-            if path != other_path and path[:len(other_path)] == other_path:
+            if path != other_path and path == other_path[:len(path)]:
                 break
         else:
             deduped_paths.append(list(path))
     return deduped_paths
 
 
+
 def build_tree(endpoints: List[str]) -> Dict:
+    """
+    Build tree out of the endpoints.
+    """
     nested_dict = {}
     for endpoint in endpoints:
         current_dict = nested_dict
@@ -51,7 +45,7 @@ def build_tree(endpoints: List[str]) -> Dict:
 
 
 if __name__ == '__main__':
-    refined_endpoints = [refine_entry(x) for x in service2]
+    refined_endpoints = [refine_entry(x) for x in service2l]
     for e in refined_endpoints:
         print(e)
     print('z' * 80)
@@ -60,4 +54,4 @@ if __name__ == '__main__':
     #     print(d)
     # print('x' * 80)
     tree = build_tree(deduped)
-    # pprint(tree)
+    pprint(tree)
